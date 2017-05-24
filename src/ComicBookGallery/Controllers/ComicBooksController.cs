@@ -1,4 +1,5 @@
-﻿using ComicBookGallery.Models;
+﻿using ComicBookGallery.Data;
+using ComicBookGallery.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,22 @@ namespace ComicBookGallery.Controllers
 {
     public class ComicBooksController : Controller
     {
-        public ActionResult Detail()
+        private ComicBookRepository _comicBookRepository = null;
+
+        public ComicBooksController()
         {
-            return View();
+            _comicBookRepository = new ComicBookRepository();
+        }
+        
+        public ActionResult Detail(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
+
+            ComicBook comicBook = _comicBookRepository.GetComicBook(id.Value);
+            return View(comicBook);
         }
     }
 }
